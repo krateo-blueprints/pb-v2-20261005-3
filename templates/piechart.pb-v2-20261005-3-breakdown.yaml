@@ -1,0 +1,25 @@
+apiVersion: widgets.templates.krateo.io/v1beta1
+kind: PieChart
+metadata:
+  name: pb-v2-20261005-3-breakdown
+  namespace: '{{ include "page.tierNamespace" (dict "ctx" . "tier" "common") }}'
+spec:
+  apiRef:
+    name: pb-v2-20261005-3-pods
+    namespace: krateo-system
+  resourcesRefs:
+    items: []
+  widgetData:
+    angleField: count
+    colorField: verdict
+    colorMap:
+      Overprovisioned: orange
+      Right-sized: green
+      Underprovisioned: red
+      Unknown: gray
+    data: []
+    innerRadius: 60
+    legendPosition: right
+  widgetDataTemplate:
+    - expression: '${ [ (.items // [])[] | (.verdict // "Unknown") ] | group_by(.) | map({ verdict: .[0], count: length }) }'
+      forPath: data
