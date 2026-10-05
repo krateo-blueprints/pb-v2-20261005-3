@@ -1,0 +1,16 @@
+# REGISTERS this page set: core-provider pulls the chart, generates the CRD from values.schema.json
+# and serves the Kind PbV2202610053 as composition.krateo.io/v<release tag, dots as dashes>.
+# Register it from the portal once a release is green (builder deliverables -> Register), entering
+# the release tag as the version. The release attaches this file, with its tag filled in, to
+# https://github.com/krateo-blueprints/pb-v2-20261005-3/releases/tag/<tag>.
+# On the branch the version below is a placeholder, and registering it as it stands pins a chart
+# version that was never published.
+apiVersion: core.krateo.io/v1alpha1
+kind: CompositionDefinition
+metadata:
+  name: pb-v2-20261005-3
+  namespace: krateo-system
+spec:
+  chart:
+    url: oci://ghcr.io/krateo-blueprints/charts/pb-v2-20261005-3
+    version: CHART_VERSION
