@@ -1,0 +1,11 @@
+apiVersion: widgets.templates.krateo.io/v1beta1
+kind: PageHeader
+metadata:
+  name: pb-v2-20261005-3-header
+  namespace: '{{ include "page.tierNamespace" (dict "ctx" . "tier" "common") }}'
+spec:
+  resourcesRefs:
+    items: []
+  widgetData:
+    subtitle: Cluster pod CPU provisioning and live utilization
+    title: Pod sizing
