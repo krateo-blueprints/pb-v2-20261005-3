@@ -1,0 +1,37 @@
+apiVersion: widgets.templates.krateo.io/v1beta1
+kind: Flex
+metadata:
+  name: page-pb-v2-20261005-3
+  namespace: '{{ include "page.tierNamespace" (dict "ctx" . "tier" "common") }}'
+spec:
+  resourcesRefs:
+    items:
+      - apiVersion: widgets.templates.krateo.io/v1beta1
+        id: pb-v2-20261005-3-header
+        name: pb-v2-20261005-3-header
+        namespace: '{{ include "page.tierNamespace" (dict "ctx" . "tier" "common") }}'
+        resource: pageheaders
+        verb: GET
+      - apiVersion: widgets.templates.krateo.io/v1beta1
+        id: pb-v2-20261005-3-breakdown
+        name: pb-v2-20261005-3-breakdown
+        namespace: '{{ include "page.tierNamespace" (dict "ctx" . "tier" "common") }}'
+        resource: piecharts
+        verb: GET
+      - apiVersion: widgets.templates.krateo.io/v1beta1
+        id: pb-v2-20261005-3-table
+        name: pb-v2-20261005-3-table
+        namespace: '{{ include "page.tierNamespace" (dict "ctx" . "tier" "common") }}'
+        resource: tables
+        verb: GET
+  widgetData:
+    allowedResources:
+      - pageheaders
+      - piecharts
+      - tables
+    gap: middle
+    items:
+      - resourceRefId: pb-v2-20261005-3-header
+      - resourceRefId: pb-v2-20261005-3-breakdown
+      - resourceRefId: pb-v2-20261005-3-table
+    vertical: true
