@@ -1,0 +1,26 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "additionalProperties": false,
+  "description": "Krateo Composable Portal pages — pb-v2-20261005-3.",
+  "properties": {
+    "global": {
+      "description": "Set by composition-dynamic-controller on every render (composition name, namespace, kind, ...); not for a deployer to fill in.",
+      "type": "object"
+    },
+    "tiers": {
+      "additionalProperties": false,
+      "description": "Which namespace this page set is created in. Empty = the release namespace.",
+      "properties": {
+        "common": {
+          "default": "",
+          "title": "Namespace",
+          "type": "string"
+        }
+      },
+      "title": "Namespace tiers",
+      "type": "object"
+    }
+  },
+  "title": "pb-v2-20261005-3",
+  "type": "object"
+}

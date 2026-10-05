@@ -1,0 +1,29 @@
+apiVersion: widgets.templates.krateo.io/v1beta1
+kind: Table
+metadata:
+  name: pb-v2-20261005-3-table
+  namespace: '{{ include "page.tierNamespace" (dict "ctx" . "tier" "common") }}'
+spec:
+  apiRef:
+    name: pb-v2-20261005-3-pods
+    namespace: krateo-system
+  resourcesRefs:
+    items: []
+  widgetData:
+    allowedResources: []
+    columns:
+      - title: Pod
+        valueKey: name
+      - title: Namespace
+        valueKey: namespace
+      - title: Verdict
+        valueKey: verdict
+      - title: Request (m)
+        valueKey: request
+      - title: Usage (m)
+        valueKey: usage
+      - title: Util (%)
+        valueKey: util
+  widgetDataTemplate:
+    - expression: ${ (.items // []) | sort_by([(- (.severity // 0)), (- (.cpu_utilization_pct // 0)), .name]) | map([ {valueKey:"name",kind:"jsonSchemaType",type:"string",stringValue:.name}, {valueKey:"namespace",kind:"jsonSchemaType",type:"string",stringValue:.namespace}, {valueKey:"verdict",kind:"tag",stringValue:(.verdict // "Unknown"),color:(if .verdict == "Underprovisioned" then "red" elif .verdict == "Overprovisioned" then "orange" elif .verdict == "Right-sized" then "green" else "gray" end)}, {valueKey:"request",kind:"jsonSchemaType",type:"integer",numberValue:(((.cpu_request_cores // 0) * 1000) | round)}, {valueKey:"usage",kind:"jsonSchemaType",type:"integer",numberValue:(((.cpu_usage_cores // 0) * 1000) | round)}, {valueKey:"util",kind:"jsonSchemaType",type:"decimal",decimalValue:((((.cpu_utilization_pct // 0) * 10) | round / 10) | tostring)} ]) }
+      forPath: dataSource

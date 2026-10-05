@@ -1,0 +1,45 @@
+apiVersion: templates.krateo.io/v1
+kind: RESTAction
+metadata:
+  name: pb-v2-20261005-3-pods
+  namespace: '{{ include "page.tierNamespace" (dict "ctx" . "tier" "common") }}'
+spec:
+  api:
+    - continueOnError: true
+      name: pods
+      path: /api/v1/pods
+      verb: GET
+    - continueOnError: true
+      name: metrics
+      path: /apis/metrics.k8s.io/v1beta1/pods
+      verb: GET
+  filter: |
+    include "quantity";
+
+    ((.metrics.items // [])
+      | map({
+          key: "\(.metadata.namespace)/\(.metadata.name)",
+          value: ([ .containers[]?.usage?.cpu ] | sum_quantities)
+        })
+      | from_entries) as $usage_map
+    | {
+        items: [
+          (.pods.items // [])[]
+          | select(.metadata.namespace != "kube-system" and .status.phase == "Running")
+          | .metadata.name as $name
+          | .metadata.namespace as $ns
+          | ([ .spec.containers[]?.resources?.requests?.cpu ] | sum_quantities) as $req
+          | ($usage_map["\($ns)/\($name)"]) as $usage
+          | utilization_pct($usage; $req) as $util
+          | provisioning_verdict($util) as $verdict
+          | {
+              name: $name,
+              namespace: $ns,
+              cpu_request_cores: $req,
+              cpu_usage_cores: $usage,
+              cpu_utilization_pct: $util,
+              verdict: $verdict,
+              severity: ($verdict | provisioning_severity)
+            }
+        ]
+      }

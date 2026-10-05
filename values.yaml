@@ -1,0 +1,3 @@
+tiers:
+  # Namespace this page set is created in. Empty = the release namespace.
+  common: ""
